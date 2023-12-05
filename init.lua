@@ -120,6 +120,8 @@ require('lazy').setup({
     'christoomey/vim-tmux-navigator'
   },
 
+  { 'kevinhwang91/nvim-ufo', dependencies = { 'kevinhwang91/promise-async' } },
+
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
   {
@@ -230,7 +232,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',  opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -280,6 +282,12 @@ require('lazy').setup({
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+
+-- Code Fold
+vim.o.foldcolumn = '0'
+vim.o.foldlevel = 99
+vim.o.foldlevelstart = 99
+vim.o.foldenable = true
 
 -- Set highlight on search
 vim.o.hlsearch = false
@@ -367,6 +375,24 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 
 vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
   { desc = "Search and replace word" })
+
+-- Code Fold
+vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+vim.keymap.set('n', 'zK', function()
+  local winid = require('ufo').peekFoldedLinesUnderCursor()
+  if not winid then
+    vim.lsp.buf.hover()
+  end
+end, { desc = "Peek Fold" })
+
+
+require('ufo').setup({
+  provider_selector = function(bufnr, filetype, buftype)
+    return { 'treesitter', 'indent' }
+  end
+})
+
 
 -- [[ Configure Harpoon ]]
 local harpoon = require("harpoon")
@@ -592,6 +618,17 @@ require('which-key').register {
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
 }
 
+require("typescript-tools").setup({
+  on_attach = function(client, bufnr)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
+    on_attach(client, bunfnr)
+  end,
+  settings = {
+    tsserver_max_memory = 8092,
+    separate_diagnostic_server = false,
+  }
+})
 require("elixir").setup()
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -613,8 +650,8 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
+  html = { filetypes = { 'html', 'twig', 'hbs' } },
+  tailwindcss = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
