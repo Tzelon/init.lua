@@ -34,6 +34,9 @@ return {
         bashls = true,
         lua_ls = true,
         cssls = true,
+        svelte = true,
+        tailwindcss = true,
+        html = true,
 
         -- Probably want to disable formatting for this lang server
         tsserver = true,
@@ -59,10 +62,15 @@ return {
           },
         },
 
-        lexical = {
-          cmd = { '/Users/tzelonmachluf/.local/share/nvim/mason/bin/lexical', 'server' },
-          root_dir = require('lspconfig.util').root_pattern { 'mix.exs' },
+        mdx_analyzer = {
+          filetypes = { 'markdown.mdx', 'mdx' },
         },
+
+        -- lexical = {
+        --   enable = false,
+        --   cmd = { '/Users/tzelonmachluf/.local/share/nvim/mason/bin/lexical', 'server' },
+        --   root_dir = require('lspconfig.util').root_pattern { 'mix.exs' },
+        -- },
 
         zls = true,
       }
@@ -81,7 +89,7 @@ return {
         'stylua',
         'lua_ls',
         'delve',
-        --	"tailwind-language-server",
+        'prettier',
       }
 
       vim.list_extend(ensure_installed, servers_to_install)

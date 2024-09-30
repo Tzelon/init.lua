@@ -4,6 +4,7 @@ local data = assert(vim.fn.stdpath 'data') --[[@as string]]
 -- See `:help telescope` and `:help telescope.setup()`
 require('telescope').setup {
   defaults = {
+    file_ignore_patterns = { 'node_modules', 'deps', '_build' },
     mappings = {
       i = {
         ['<C-u>'] = false,

@@ -55,7 +55,7 @@ vim.o.completeopt = 'menuone,noselect'
 vim.o.termguicolors = true
 
 vim.o.scrolloff = 8
-vim.o.colorcolumn = 80
+vim.o.colorcolumn = '120'
 vim.o.wrap = false
 
 ----- Interesting Options -----
